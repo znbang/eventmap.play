@@ -1,0 +1,174 @@
+#{extends 'main.html' /}
+#{set title: id ? event.name : messages.get('views.Events.form.title') /}
+#{set 'moreStyles'}
+<link rel="stylesheet" media="screen" href="https://unpkg.com/element-ui@2.13.0/lib/theme-chalk/index.css">
+<link rel="stylesheet" media="screen" href="https://unpkg.com/quill@1.3.7/dist/quill.snow.css">
+<style>
+    #editor { height: 15rem; }
+    .editor-is-invalid {
+        border: 1px solid red;
+    }
+    #map { height: 25rem; }
+    #map:after {
+        position: absolute; top: 50%; left: 50%; width: 48px; height: 48px;
+        margin: -48px 0 0 -24px; display: block; content: " ";
+        background: url(@{'/public/images/map-marker-icon.png'});
+        background-size: 48px 48px;
+        pointer-events: none;
+    }
+</style>
+#{/set}
+
+<div id="map"></div>
+<div class="container mt-2 mb-3">
+    <form method="post" action="@{Events.form(id)}">
+        <div class="row">
+            <div class="form-group col-md-4">
+                <label for="name">&{'views.Events.form.name'}</label>
+                <input type="text" id="name" name="event.name" class="form-control #{ifError 'event.name'}is-invalid#{/ifError}" value="${event.name}">
+                <div class="invalid-feedback">&{'views.Events.form.name.required'}</div>
+            </div>
+            <div class="form-group col-md-4">
+                <label for="location">&{'views.Events.form.location'}</label>
+                <input type="text" id="location" name="event.location" class="form-control #{ifError 'event.location'}is-invalid#{/ifError}" value="${event.location}">
+                <div class="invalid-feedback">&{'views.Events.form.location.required'}</div>
+            </div>
+            <div class="form-group col-md-4" id="app">
+                <label for="startDate">&{'views.Events.form.date'}</label>
+                <div>
+                    <el-date-picker v-model="eventDate" @change="eventDateChanged" type="daterange" start-placeholder="&{'views.Events.form.startDate'}" end-placeholder="&{'views.Events.form.endDate'}" class="form-control #{ifError 'event.startDate'}is-invalid#{/ifError}"></el-date-picker>
+                    <input type="hidden" id="startDate" name="event.startDate" class="form-control #{ifError 'event.startDate'}is-invalid#{/ifError}" value="${event.startDate}">
+                    <input type="hidden" id="endDate" name="event.endDate" class="form-control #{ifError 'event.endDate'}is-invalid#{/ifError}" value="${event.endDate}">
+                    <div class="invalid-feedback">&{'views.Events.form.date.required'}</div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="url">&{'views.Events.form.url'}</label>
+            <input type="text" id="url" name="event.url" class="form-control #{ifError 'event.url'}is-invalid#{/ifError}" value="${event.url}">
+            <div class="invalid-feedback">&{'views.Events.form.url.required'}</div>
+        </div>
+        <div class="form-group">
+            <label for="detail">&{'views.Events.form.detail'}</label>
+            <div class="#{ifError 'event.detail'}editor-is-invalid#{/ifError}">
+                <div id="editor">#{verbatim}${event.detail}#{/verbatim}</div>
+            </div>
+            <input type="hidden" id="detail" name="event.detail" class="form-control #{ifError 'event.detail'}is-invalid#{/ifError}" value="${event.detail}">
+            <div class="invalid-feedback">&{'views.Events.form.detail.required'}</div>
+        </div>
+        <input type="hidden" id="lat" name="event.lat" value="${event.lat ?: 23.4}">
+        <input type="hidden" id="lng" name="event.lng" value="${event.lng ?: 120.9}">
+        <input type="hidden" id="zoom" name="event.zoom" value="${event.zoom ?: 8}">
+        #{if id}
+        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteEventModal">&{'views.Events.form.delete'}</button>
+        #{/if}
+        <button type="submit" class="btn btn-primary">&{'views.Events.form.save'}</button>
+        &{'views.Events.form.or'}
+        <a href="@{Events.user()}">&{'views.Events.form.cancel'}</a>
+        #{authenticityToken /}
+    </form>
+    #{form @delete(id), method:'delete', id:'deleteEventForm'}#{/form}
+    <div id="deleteEventModal" class="modal fade" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body">&{'views.Events.form.confirmDelete'}</div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">&{'views.Events.form.cancel'}</button>
+                    <button type="submit" form="deleteEventForm" class="btn btn-danger">&{'views.Events.form.delete'}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<input type="text" id="searchBox" class="form-control col-md-4 mb-1" placeholder="&{'views.Events.form.findLocation'}">
+<script src="https://unpkg.com/vue@2.6.11/dist/vue.min.js" type="text/javascript" charset="${_response_encoding}"></script>
+<script src="https://unpkg.com/element-ui@2.13.0/lib/index.js" type="text/javascript" charset="${_response_encoding}"></script>
+<script src="https://unpkg.com/quill@1.3.7/dist/quill.min.js" type="text/javascript" charset="${_response_encoding}"></script>
+<script src="https://unpkg.com/dayjs@1.8.19/dayjs.min.js" type="text/javascript" charset="${_response_encoding}"></script>
+<script>
+    new Vue({
+        el: '#app',
+        data() {
+            return {
+                eventDate: []
+            }
+        },
+        mounted() {
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+            if (startDate && endDate) {
+                this.eventDate = [new Date(startDate), new Date(endDate)];
+            }
+        },
+        methods: {
+            eventDateChanged(value) {
+                if (value) {
+                    document.getElementById('startDate').value = dayjs(value[0]).format('YYYY-MM-DDTHH:mm:ss')
+                    document.getElementById('endDate').value = dayjs(value[1]).format('YYYY-MM-DDTHH:mm:ss')
+                } else {
+                    document.getElementById('startDate').value = ''
+                    document.getElementById('endDate').value = ''
+                }
+            },
+        }
+    });
+</script>
+<script>
+    const editorOptions = {
+        theme: 'snow',
+        modules: {
+            toolbar: [
+                [{ size: [] }],
+                [{ list: 'ordered' }, { list: 'bullet' }],
+                ['bold', 'italic', 'underline', 'strike', 'clean', 'link']
+            ]
+        }
+    };
+    const editor = new Quill('#editor', editorOptions);
+    editor.on('text-change', function () {
+        document.getElementById('detail').value = editor.root.innerHTML;
+    });
+</script>
+<script>
+    function initMap() {
+        // position and zoom
+        const inputLat = document.getElementById('lat');
+        const inputLng = document.getElementById('lng');
+        const inputZoom = document.getElementById('zoom');
+        const zoom = parseInt(inputZoom.value);
+        const center = { lat: parseFloat(inputLat.value), lng: parseFloat(inputLng.value) };
+        const options = {
+            zoom, center, gestureHandling: 'greedy', fullscreenControl: false, streetViewControl: false,
+            mapTypeControlOptions: { position: google.maps.ControlPosition.RIGHT_TOP }
+        };
+        const map = new google.maps.Map(document.getElementById('map'), options);
+        map.addListener('center_changed', function() {
+            inputLat.value = map.getCenter().lat();
+            inputLng.value = map.getCenter().lng();
+        });
+        map.addListener('zoom_changed', function () {
+            inputZoom.value = map.getZoom();
+        });
+        // search box
+        const searchBoxInput = document.getElementById('searchBox');
+        const searchBox = new google.maps.places.SearchBox(searchBoxInput);
+        map.controls[google.maps.ControlPosition.BOTTOM_CENTER].push(searchBoxInput);
+        searchBox.addListener('places_changed', function () {
+            const places = searchBox.getPlaces();
+            if (places === null) {
+                return;
+            }
+            places.forEach(function (place) {
+                if (!place.geometry) {
+                    return;
+                }
+                if (document.getElementById('location').value === '') {
+                    document.getElementById('location').value = document.getElementById('searchBox').value;
+                }
+                map.setZoom(16);
+                map.setCenter(place.geometry.location);
+            });
+        });
+    }
+</script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=${play.configuration.getProperty('google.api_key')}&callback=initMap&libraries=places&language=${lang}"></script>

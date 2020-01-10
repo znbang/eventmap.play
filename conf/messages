@@ -1,0 +1,37 @@
+views.main.events=活動
+views.main.manage=管理
+views.main.add=新增
+views.main.login=登入
+views.main.logout=登出
+
+views.Application.index.title=首頁
+
+views.Authenticate.login.title=登入
+views.Authenticate.login.loginWithGoogle=使用 Google 帳號登入
+views.Authenticate.login.loginWithFacebook=使用 Facebook 帳號登入
+
+views.Events.index.title=活動
+views.Events.index.date=日期
+views.Events.index.name=名稱
+views.Events.user.title=管理
+views.Events.user.date=日期
+views.Events.user.name=名稱
+views.Events.form.title=新增
+views.Events.form.name=名稱
+views.Events.form.name.required=請輸入活動名稱。
+views.Events.form.location=地點
+views.Events.form.location.required=請輸入活動地點。
+views.Events.form.date=日期
+views.Events.form.date.required=請輸入活動日期。
+views.Events.form.startDate=開始日期
+views.Events.form.endDate=結束日期
+views.Events.form.url=網址
+views.Events.form.url.required=請輸入活動網址。
+views.Events.form.detail=內容
+views.Events.form.detail.required=請輸入活動內容。
+views.Events.form.delete=刪除
+views.Events.form.or=或
+views.Events.form.save=儲存
+views.Events.form.cancel=取消
+views.Events.form.findLocation=查詢活動地點
+views.Events.form.confirmDelete=是否刪除這個活動？

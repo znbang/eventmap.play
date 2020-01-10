@@ -1,0 +1,66 @@
+#{extends 'main.html' /}
+#{set title: messages.get('views.Application.index.title')/}
+#{set 'moreStyles'}
+<style>
+    body { display: flex; flex-direction: column; }
+    #map { flex: auto; }
+</style>
+#{/set}
+
+<div id="map"></div>
+<script>
+    const events = JSON.parse('${jsonEvents.raw()}');
+
+    function addMarkers(map) {
+        let infoWindow = new google.maps.InfoWindow();
+        let markers = events.map(function (event) {
+            let marker = new google.maps.Marker({
+                position: event,
+                map: map,
+                icon: { url: '@{'/public/images/map-marker-icon.png'}', scaledSize: {width: 36, height: 36} }
+            });
+            marker.addListener('mouseover', function () {
+                let content = '<div>' + event.name + '</div><div class="el-icon-date">' + event.startDate
+                if (event.startDate !== event.endDate) {
+                    content += ' ~ ' + event.endDate
+                }
+                content += '</div>'
+                infoWindow.setContent(content);
+                infoWindow.open(map, marker);
+            });
+            marker.addListener('mouseout', function () {
+                infoWindow.close();
+            });
+            marker.addListener('click', function () {
+                window.location.assign('/events/' + event.id);
+            });
+            return marker;
+        });
+        new MarkerClusterer(map, markers, { imagePath: '/public/images/m' });
+    }
+
+    function initMap() {
+        let center = { lat: 23.7, lng: 121.2 };
+        let zoom = 8;
+        let q = new URLSearchParams(location.search.substring(1));
+        if (q.get('lat') && q.get('lng')) {
+            center = {
+                lat: parseFloat(q.get('lat')),
+                lng: parseFloat(q.get('lng'))
+            }
+        }
+        if (q.get('zoom')) {
+            zoom = parseInt(q.get('zoom'));
+        }
+        let options = { zoom: zoom, center: center, fullscreenControl: false, streetViewControl: false, mapTypeControlOptions: {position: google.maps.ControlPosition.RIGHT_TOP} };
+        let map = new google.maps.Map(document.getElementById('map'), options);
+        google.maps.event.addDomListener(map, 'idle', function () {
+            let cnt = map.getCenter();
+            let newLocation = [window.location.pathname + '?lat=', cnt.lat(), '&lng=', cnt.lng(), '&zoom=', map.getZoom()].join('');
+            history.replaceState(null, '', newLocation);
+        });
+        addMarkers(map);
+    }
+</script>
+<script src="https://unpkg.com/markerclustererplus@2.1.4/dist/markerclusterer.min.js" type="text/javascript" charset="${_response_encoding}"></script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=${play.configuration.getProperty('google.api_key')}&language=${lang}&callback=initMap"></script>

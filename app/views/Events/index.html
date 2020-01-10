@@ -1,0 +1,32 @@
+#{extends 'main.html' /}
+#{set title: messages.get('views.Events.index.title')/}
+
+<div class="container">
+    <div class="mt-2">
+        #{pagination totalElements: totalElements, page: page, size: size /}
+    </div>
+    <table class="table">
+        <colgroup>
+            <col style="width: 8rem" />
+            <col />
+        </colgroup>
+        <thead>
+        <tr>
+            <th>&{'views.Events.index.date'}</th>
+            <th>&{'views.Events.index.name'}</th>
+        </tr>
+        </thead>
+        <tbody>
+        #{list events, as:'event'}
+        <tr>
+            <td>${event.startDate.asDate()}</td>
+            <td><a href="@{show(event.id)}">${event.name}</a></td>
+        </tr>
+        #{/list}
+        </tbody>
+    </table>
+    <div class="mt-2">
+        #{pagination totalElements: totalElements, page: page, size: size /}
+    </div>
+    #{adsbygoogle /}
+</div>

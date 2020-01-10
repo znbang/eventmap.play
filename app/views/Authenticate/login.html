@@ -1,0 +1,23 @@
+#{extends 'main.html' /}
+#{set title: messages.get('views.Authenticate.login.title')/}
+%{
+    googleClientId = play.configuration.getProperty("google.client_id")
+    facebookClientId = play.configuration.getProperty("facebook.client_id")
+    googleRedirectUri = play.mvc.Router.getFullUrl('Authenticate.loginWithGoogle').replace('http://eventmap.', 'https://eventmap.')
+    facebookRedirectUri = play.mvc.Router.getFullUrl('Authenticate.loginWithFacebook').replace('http://eventmap.', 'https://eventmap.')
+}%
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-4">
+            <a id="loginWithGoogle" type="button" class="btn btn-primary btn-block"
+               href="https://accounts.google.com/o/oauth2/v2/auth?client_id=${googleClientId}&scope=openid+profile+email&response_type=code&redirect_uri=${googleRedirectUri}">
+                &{'views.Authenticate.login.loginWithGoogle'}
+            </a>
+            <a id="loginWithFacebook" type="button" class="btn btn-primary btn-block"
+               href="https://www.facebook.com/v5.0/dialog/oauth?client_id=${facebookClientId}&scope=public_profile+email&response_type=code&redirect_uri=${facebookRedirectUri}">
+            &{'views.Authenticate.login.loginWithFacebook'}
+            </a>
+        </div>
+    </div>
+</div>

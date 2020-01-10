@@ -1,0 +1,37 @@
+views.main.events=Events
+views.main.manage=Manage
+views.main.add=Add
+views.main.login=Login
+views.main.logout=Logout
+
+views.Application.index.title=Home
+
+views.Authenticate.login.title=Login
+views.Authenticate.login.loginWithGoogle=Login with Google Account
+views.Authenticate.login.loginWithFacebook=Login with Facebook Account
+
+views.Events.index.title=Events
+views.Events.index.date=Date
+views.Events.index.name=Name
+views.Events.user.title=Manage
+views.Events.user.date=Date
+views.Events.user.name=Name
+views.Events.form.title=Add
+views.Events.form.name=Name
+views.Events.form.name.required=Please input name.
+views.Events.form.location=Location
+views.Events.form.location.required=Please input location.
+views.Events.form.date=Date
+views.Events.form.date.required=Please input date.
+views.Events.form.startDate=Start date
+views.Events.form.endDate=End date
+views.Events.form.url=Website
+views.Events.form.url.required=Please input website.
+views.Events.form.detail=Detail
+views.Events.form.detail.required=Please input detail.
+views.Events.form.delete=Delete
+views.Events.form.or=or
+views.Events.form.save=Save
+views.Events.form.cancel=Cancel
+views.Events.form.findLocation=Find location
+views.Events.form.confirmDelete=Do you want to delete this event?

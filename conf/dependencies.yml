@@ -1,0 +1,7 @@
+# Application dependencies
+
+require:
+    - play
+    - com.github.kevinsawicki -> http-request 6.0
+    - com.vladmihalcea -> hibernate-types-52 2.9.0
+    - org.jsoup -> jsoup 1.12.1

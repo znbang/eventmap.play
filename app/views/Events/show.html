@@ -1,0 +1,39 @@
+#{extends 'main.html' /}
+#{set title: event.name /}
+#{set 'moreStyles'}
+<link rel="stylesheet" media="screen" href="https://unpkg.com/element-ui@2.13.0/lib/theme-chalk/icon.css">
+<style>
+    .wrapper { display: flex;flex-direction: column; }
+    .map { min-height: 25rem; }
+    .invisible { display: none; }
+</style>
+#{/set}
+
+<div class="wrapper">
+    <iframe class="map" frameborder="0" src="https://www.google.com/maps/embed/v1/place?key=${play.configuration.getProperty('google.api_key')}&language=${lang}&zoom=${event.zoom}&q=${event.lat},${event.lng}"></iframe>
+    <div class="container">
+        <div itemscope itemtype="http://schema.org/Event">
+            <div itemscope itemprop="location" itemtype="http://schema.org/Place">
+                <div itemprop="address" class="el-icon-location-outline">
+                    ${event.location}
+                </div>
+            </div>
+            <div>
+                <div class="el-icon-date">
+                    <span itemprop="startDate">${event.startDate.asDate()}</span>(${event.startDate.asWeekday()})
+                    <span #{if event.startDate == event.endDate}class="invisible"#{/if}>
+                        至<span itemprop="endDate">${event.endDate.asDate()}</span>(${event.endDate.asWeekday()})
+                    </span>
+                </div>
+            </div>
+            #{if event.url}
+            <div class="el-icon-link">
+                <a itemprop="url" href="${event.url}">${event.url}</a>
+            </div>
+            #{/if}
+            <h4 itemprop="name">${event.name}</h4>
+            <div itemprop="description">#{verbatim}${event.detail}#{/verbatim}</div>
+        </div>
+    </div>
+    #{adsbygoogle /}
+</div>
