@@ -11,7 +11,7 @@ import java.util.List;
 public class Events extends Controller {
     @Before(unless = {"index", "show"})
     static void requireLogin() {
-        if (Security.CurrentUser.get() == null) {
+        if (getCurrentUser() == null) {
             Authenticate.login();
         }
     }
@@ -30,45 +30,43 @@ public class Events extends Controller {
     public static void index() {
         int page = params.get("page", Integer.class);
         int size = params.get("size", Integer.class);
-        long totalElements = Event.count();
+        long totalElements = eventService.count();
         if (page < 1 || page > (totalElements + size - 1) / size) {
             notFound();
         }
-        List<Event> events = Event.find("order by startDate desc").fetch(page, size);
+        List<Event> events = eventService.listEvent(page, size);
         render(events, page, size, totalElements);
     }
 
     @Transactional(readOnly = true)
     public static void show(String id) {
         Event event = Event.findById(id);
-        if (event != null) {
-            render(event);
-        } else {
+        if (event == null) {
             notFound();
         }
+        render(event);
     }
 
     @Transactional(readOnly = true)
     public static void user() {
         int page = params.get("page", Integer.class);
         int size = params.get("size", Integer.class);
-        String userId = Security.CurrentUser.get().getId();
-        long totalElements = Event.count("byUserId", userId);
+        String userId = getCurrentUser().getId();
+        long totalElements = eventService.countByUser(userId);
         if (page < 1 || page > (totalElements + size - 1) / size) {
             notFound();
         }
-        List<Event> events = Event.find("userId=?1 order by startDate desc", userId).fetch(page, size);
+        List<Event> events = eventService.listEventByUser(userId, page, size);
         render(events, page, size, totalElements);
     }
 
     @Transactional(readOnly = true)
     public static void form(String id) {
-        Event event = id == null ? new Event() : Event.findByIdAndUserId(id, Security.CurrentUser.get().getId());
-        if (event != null) {
-            render("@form", id, event);
-        } else {
+        Event event = id == null ? new Event() : eventService.getEventByUser(id, getCurrentUser().getId());
+        if (event == null) {
             notFound();
         }
+        render("@form", id, event);
     }
 
     @Transactional
@@ -89,26 +87,24 @@ public class Events extends Controller {
             render("@form", id, event);
         }
 
-        String userId = Security.CurrentUser.get().getId();
-        Event entity = id == null ? new Event() : Event.findByIdAndUserId(id, userId);
-        if (entity != null) {
-            entity.userId = userId;
-            entity.copyFrom(event);
-            entity.save();
-            user();
-        } else {
+        String userId = getCurrentUser().getId();
+        Event entity = id == null ? new Event() : eventService.getEventByUser(id, userId);
+        if (entity == null) {
             notFound();
         }
+        entity.userId = userId;
+        entity.copyFrom(event);
+        entity.save();
+        user();
     }
 
     @Transactional
     public static void delete(String id) {
-        Event event = Event.findByIdAndUserId(id, Security.CurrentUser.get().getId());
-        if (event != null) {
-            event.delete();
-            user();
-        } else {
+        Event event = eventService.getEventByUser(id, getCurrentUser().getId());
+        if (event == null) {
             notFound();
         }
+        event.delete();
+        user();
     }
 }

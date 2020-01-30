@@ -2,7 +2,6 @@ package controllers;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import models.Event;
 import play.db.jpa.JPA;
 import play.db.jpa.NoTransaction;
 import play.db.jpa.Transactional;
@@ -19,7 +18,7 @@ public class Application extends Controller {
 
     @Transactional(readOnly = true)
     public static void index() {
-        List<JsonObject> events = Event.findActive().stream().map(event -> {
+        List<JsonObject> events = eventService.listActiveEvent().stream().map(event -> {
             JsonObject json = new JsonObject();
             json.addProperty("id", event.id);
             json.addProperty("name", event.name);
@@ -52,7 +51,7 @@ public class Application extends Controller {
         StringBuilder sb = new StringBuilder();
         sb.append("https://eventmap.app/login\n");
         sb.append("https://eventmap.app/events\n");
-        JPA.em().createQuery("select a.id from Event a", String.class).getResultStream().forEach(id -> {
+        JPA.em().createQuery("select a.id from Event a order by a.createdAt", String.class).getResultStream().forEach(id -> {
             sb.append("https://eventmap.app/events/" + id + "\n");
         });
         renderText(sb);

@@ -4,8 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
-import java.time.*;
-import java.util.List;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "events")
@@ -44,16 +43,5 @@ public class Event extends Model {
         this.lng = src.lng;
         this.lat = src.lat;
         this.zoom = src.zoom;
-    }
-
-    public static List<Event> findActive() {
-        LocalDateTime today = ZonedDateTime.of(LocalDate.now(), LocalTime.MIDNIGHT, ZoneId.systemDefault()).withZoneSameInstant(ZoneOffset.UTC).toLocalDateTime();
-        return Event.find("endDate>=:today order by startDate desc")
-                .bind("today", today)
-                .fetch();
-    }
-
-    public static Event findByIdAndUserId(String id, String userId) {
-        return find("byIdAndUserId", id, userId).first();
     }
 }
