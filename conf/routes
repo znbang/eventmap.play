@@ -10,6 +10,7 @@ GET     /login                                  Authenticate.login
 GET     /login-with-google                      Authenticate.loginWithGoogle
 GET     /login-with-facebook                    Authenticate.loginWithFacebook
 GET     /logout                                 Authenticate.logout
+
 GET     /events                                 event.Events.index
 GET     /events/user                            event.Events.user
 GET     /events/{id}/edit                       event.Events.form
@@ -18,6 +19,16 @@ GET     /events/new                             event.Events.form
 POST    /events/new                             event.Events.save
 GET     /events/{id}                            event.Events.show
 DELETE  /events/{id}                            event.Events.delete
+
+GET     /books                                  story.Books.index
+GET     /books/{id}/edit                        story.Books.form
+POST    /books/{id}/edit                        story.Books.save
+GET     /books/new                              story.Books.form
+POST    /books/new                              story.Books.save
+DELETE  /books/{id}                             story.Books.delete
+GET     /books/{id}/download                    story.Books.download
+GET     /books/{bookId}                         story.Chapters.index
+GET     /books/{bookId}/{page}                  story.Chapters.show
 
 # Ignore favicon requests
 GET     /favicon.ico                            404

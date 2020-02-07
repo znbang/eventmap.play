@@ -1,0 +1,45 @@
+#{extends 'story.html' /}
+#{set title: id ? 'Books.form.edit' : 'Books.form.add' /}
+
+<div class="container">
+    <form method="post" action="@{controllers.story.Books.form(id)}">
+        #{authenticityToken /}
+        <div class="form-group">
+            <label for="title">&{'Books.form.title'}</label>
+            <input class="form-control #{ifError 'book.title'}is-invalid#{/ifError}" type="text" id="title" name="book.title" value="${book.title}">
+            <div class="invalid-feedback">#{error 'book.title' /}</div>
+        </div>
+        <div class="form-group">
+            <label for="author">&{'Books.form.author'}</label>
+            <input class="form-control #{ifError 'book.author'}is-invalid#{/ifError}" type="text" id="author" name="book.author" value="${book.author}">
+            <div class="invalid-feedback">#{error 'book.author' /}</div>
+        </div>
+        <div class="form-group">
+            <label for="url">&{'Books.form.url'}</label>
+            <input class="form-control #{ifError 'book.url'}is-invalid#{/ifError}" type="text" id="url" name="book.url" value="${book.url}">
+            <div class="invalid-feedback">#{error 'book.url' /}</div>
+        </div>
+        #{if id}
+        <a class="btn btn-danger" data-toggle="modal" data-target="#deleteModal" href="#">&{'Books.form.delete'}</a>
+        <a class="btn btn-info" href="#">&{'Books.form.refresh'}</a>
+        #{/if}
+        <button class="btn btn-primary" type="submit">&{'Books.form.save'}</button>
+        <a class="btn btn-secondary" href="/books">&{'Books.form.cancel'}</a>
+    </form>
+    <div class="modal fade" id="deleteModal">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body">
+                    &{'Books.form.delete.confirm', book.title}
+                </div>
+                <div class="modal-footer">
+                    <form method="post" action="/books/${id}?x-http-method-override=DELETE">
+                        #{authenticityToken /}
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">&{'Books.form.cancel'}</button>
+                        <button type="submit" class="btn btn-danger">&{'Books.form.delete'}</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

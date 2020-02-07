@@ -1,0 +1,24 @@
+#{extends 'story.html' /}
+#{set title: book.title /}
+
+<div class="container">
+    <div class="mt-2">
+        #{pagination totalPage: totalPage, page: page, size: size /}
+    </div>
+    <h4>${book.title}</h4>
+    <table class="table table-sm">
+        <tr>
+            <th class="w-auto">#</th>
+            <th class="w-100">名稱</th>
+        </tr>
+        #{list chapters, as:'chapter'}
+        <tr>
+            <td>${chapter.page}</td>
+            <td><a href="/books/${book.id}/${chapter.page}">${chapter.title ?: '(無題)'}</a></td>
+        </tr>
+        #{/list}
+    </table>
+    <div class="mt-2">
+        #{pagination totalPage: totalPage, page: page, size: size /}
+    </div>
+</div>

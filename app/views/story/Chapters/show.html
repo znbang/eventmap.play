@@ -1,0 +1,36 @@
+#{extends 'story.html' /}
+#{set title: chapter.title + '|' + book.title /}
+#{set 'moreScripts'}
+<script>
+    function paging(event) {
+        if (event.code === 'ArrowLeft') {
+            #{if page > 1}
+            window.location.href = '/books/${book.id}/${page - 1}'
+            #{/if}
+        } else if (event.code === 'ArrowRight') {
+            #{if page < totalPage}
+            window.location.href = '/books/${book.id}/${page + 1}'
+            #{/if}
+        }
+    }
+
+    addEventListener('keyup', paging)
+</script>
+#{/set}
+
+<div class="container">
+    <div class="mt-2">
+        #{chapterPagination bookId: book.id, totalPage: totalPage, page: page, size: size /}
+    </div>
+    <h4><a href="/books/${book.id}">${book.title}</a> ${chapter.title}</h4>
+    <hr>
+    <div>
+        #{list chapter.body.split('\n'), as:'line'}
+        <p>${line}</p>
+        #{/list}
+    </div>
+    <hr>
+    <div class="mt-2">
+        #{chapterPagination bookId: book.id, totalPage: totalPage, page: page, size: size /}
+    </div>
+</div>
