@@ -21,7 +21,7 @@
 
 <div id="map"></div>
 <div class="container mt-2 mb-3">
-    <form method="post" action="@{Events.form(id)}">
+    <form method="post" action="@{form(id)}">
         <div class="row">
             <div class="form-group col-md-4">
                 <label for="name">&{'views.Events.form.name'}</label>
@@ -64,7 +64,7 @@
         #{/if}
         <button type="submit" class="btn btn-primary">&{'views.Events.form.save'}</button>
         &{'views.Events.form.or'}
-        <a href="@{Events.user()}">&{'views.Events.form.cancel'}</a>
+        <a href="/events/user">&{'views.Events.form.cancel'}</a>
         #{authenticityToken /}
     </form>
     #{form @delete(id), method:'delete', id:'deleteEventForm'}#{/form}

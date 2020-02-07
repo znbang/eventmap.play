@@ -1,4 +1,7 @@
-package models;
+package models.event;
+
+import models.Model;
+import models.RandomId;
 
 import javax.persistence.Entity;
 import javax.persistence.PrePersist;

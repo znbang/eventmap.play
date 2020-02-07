@@ -10,14 +10,14 @@ GET     /login                                  Authenticate.login
 GET     /login-with-google                      Authenticate.loginWithGoogle
 GET     /login-with-facebook                    Authenticate.loginWithFacebook
 GET     /logout                                 Authenticate.logout
-GET     /events                                 Events.index
-GET     /events/user                            Events.user
-GET     /events/{id}/edit                       Events.form
-POST    /events/{id}/edit                       Events.save
-GET     /events/new                             Events.form
-POST    /events/new                             Events.save
-GET     /events/{id}                            Events.show
-DELETE  /events/{id}                            Events.delete
+GET     /events                                 event.Events.index
+GET     /events/user                            event.Events.user
+GET     /events/{id}/edit                       event.Events.form
+POST    /events/{id}/edit                       event.Events.save
+GET     /events/new                             event.Events.form
+POST    /events/new                             event.Events.save
+GET     /events/{id}                            event.Events.show
+DELETE  /events/{id}                            event.Events.delete
 
 # Ignore favicon requests
 GET     /favicon.ico                            404

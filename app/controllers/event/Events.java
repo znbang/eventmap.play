@@ -1,6 +1,8 @@
-package controllers;
+package controllers.event;
 
-import models.Event;
+import controllers.Authenticate;
+import controllers.Controller;
+import models.event.Event;
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;
 import play.db.jpa.Transactional;
@@ -16,26 +18,16 @@ public class Events extends Controller {
         }
     }
 
-    @Before
-    static void initPagination() {
-        if (params.get("page") == null) {
-            params.put("page", "1");
-        }
-        if (params.get("size") == null) {
-            params.put("size", "15");
-        }
-    }
-
     @Transactional(readOnly = true)
     public static void index() {
         int page = params.get("page", Integer.class);
         int size = params.get("size", Integer.class);
-        long totalElements = eventService.count();
-        if (page < 1 || page > (totalElements + size - 1) / size) {
+        long totalPage = getTotalPage(eventService.count(), page, size);
+        if (page < 1 || page > totalPage) {
             notFound();
         }
         List<Event> events = eventService.listEvent(page, size);
-        render(events, page, size, totalElements);
+        render(events, totalPage, page, size);
     }
 
     @Transactional(readOnly = true)
@@ -52,12 +44,12 @@ public class Events extends Controller {
         int page = params.get("page", Integer.class);
         int size = params.get("size", Integer.class);
         String userId = getCurrentUser().getId();
-        long totalElements = eventService.countByUser(userId);
-        if (page < 1 || page > (totalElements + size - 1) / size) {
+        long totalPage = getTotalPage(eventService.countByUser(userId), page, size);
+        if (page < 1 || page > totalPage) {
             notFound();
         }
         List<Event> events = eventService.listEventByUser(userId, page, size);
-        render(events, page, size, totalElements);
+        render(events, totalPage, page, size);
     }
 
     @Transactional(readOnly = true)

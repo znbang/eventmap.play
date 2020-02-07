@@ -1,6 +1,6 @@
 package service;
 
-import models.Event;
+import models.event.Event;
 
 import java.time.*;
 import java.util.List;
