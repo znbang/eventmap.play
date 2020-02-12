@@ -1,6 +1,7 @@
 package controllers;
 
 import models.User;
+import models.UserSession;
 import play.cache.Cache;
 import play.mvc.Before;
 import service.EventService;
@@ -28,15 +29,27 @@ public class Controller extends play.mvc.Controller {
     }
 
     protected static User getCurrentUser() {
-        return Cache.get(session.getId(), User.class);
+        User user = Cache.get(session.getId(), User.class);
+        if (user != null) {
+            return user;
+        }
+
+        user = UserSession.findUserById(session.getId());
+        if (user != null) {
+            Cache.set(session.getId(), user, "300s");
+        }
+
+        return user;
     }
 
     protected static void setCurrentUser(User user) {
-        Cache.set(session.getId(), user);
+        Cache.set(session.getId(), user, "300s");
+        new UserSession(session.getId(), user.getId()).save();
     }
 
     protected static void resetCurrentUser() {
         Cache.delete(session.getId());
+        UserSession.delete("id=?1", session.getId());
         session.clear();
     }
 
