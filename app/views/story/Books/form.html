@@ -21,11 +21,13 @@
         </div>
         #{if id}
         <a class="btn btn-danger" data-toggle="modal" data-target="#deleteModal" href="#">&{'Books.form.delete'}</a>
-        <a class="btn btn-info" href="#">&{'Books.form.refresh'}</a>
+        <a class="btn btn-info" data-toggle="modal" data-target="#downloadAllModal" href="#">&{'Books.form.download.all'}</a>
+        <a class="btn btn-info" data-toggle="modal" data-target="#downloadNewModal" href="#">&{'Books.form.download.new'}</a>
         #{/if}
         <button class="btn btn-primary" type="submit">&{'Books.form.save'}</button>
         <a class="btn btn-secondary" href="/books">&{'Books.form.cancel'}</a>
     </form>
+
     <div class="modal fade" id="deleteModal">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -37,6 +39,40 @@
                         #{authenticityToken /}
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">&{'Books.form.cancel'}</button>
                         <button type="submit" class="btn btn-danger">&{'Books.form.delete'}</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="downloadAllModal">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body">
+                    &{'Books.form.download.all.confirm'}
+                </div>
+                <div class="modal-footer">
+                    <form method="post" action="/books/${id}/download-all">
+                        #{authenticityToken /}
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">&{'Books.form.cancel'}</button>
+                        <button type="submit" class="btn btn-primary">&{'Books.form.ok'}</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="downloadNewModal">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body">
+                    &{'Books.form.download.new.confirm'}
+                </div>
+                <div class="modal-footer">
+                    <form method="post" action="/books/${id}/download-new">
+                        #{authenticityToken /}
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">&{'Books.form.cancel'}</button>
+                        <button type="submit" class="btn btn-primary">&{'Books.form.ok'}</button>
                     </form>
                 </div>
             </div>

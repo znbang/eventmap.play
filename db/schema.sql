@@ -53,27 +53,17 @@ create table chapters (
   updated_at timestamptz not null,
   book_id bigint not null,
   page int not null,
+  url text not null,
   title text not null,
   body text not null
 );
 
 create unique index chapters_page_idx on chapters (book_id, page);
 
-create table jobs (
+create table book_jobs (
   id text primary key,
   created_at timestamptz not null,
-  type text not null,
-  book_id bigint not null,
+  book_id text not null,
   title text not null,
-  url text not null
+  status text not null
 );
-
-create unique index jobs_book_idx on jobs (book_id);
-
-create table urls (
-  id text primary key,
-  job_id bigint not null,
-  url text not null
-);
-
-create unique index urls_unique_idx on urls (job_id, url);

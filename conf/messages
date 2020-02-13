@@ -4,7 +4,7 @@ main.events=活動
 main.manage=管理
 main.add=新增
 main.books=小說
-main.tasks=工作
+main.jobs=工作
 main.search=搜尋
 
 Application.index.title=首頁
@@ -59,8 +59,17 @@ Books.form.url=網址
 Books.form.url.required=請輸入網址。
 Books.form.url.invalid=網址格式不正確。
 Books.form.url.exists=網址已存在。
+Books.form.url.unsupported=尚未支援這個網站。
 Books.form.delete=刪除
 Books.form.delete.confirm=確定要刪除 %s？
-Books.form.refresh=更新
+Books.form.download.new=下載新章節
+Books.form.download.new.confirm=確定要下載新章節？
+Books.form.download.all=重新下載全部章節
+Books.form.download.all.confirm=確定要重新下載全部章節？
 Books.form.save=儲存
 Books.form.cancel=取消
+Books.form.ok=確定
+
+BookJobs.index.job=工作
+BookJobs.index.title=書名
+BookJobs.index.status=狀態

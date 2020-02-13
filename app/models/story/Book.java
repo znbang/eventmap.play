@@ -52,13 +52,13 @@ public class Book extends Model {
     }
 
     public static List<Book> listByUserId(String userId, int page, int size) {
-        return find("userId=:userId")
+        return find("userId=:userId order by updatedAt desc")
                 .setParameter("userId", userId)
                 .fetch(page, size);
     }
 
     public static List<Book> listByUserIdForSearch(String userId, String q, int page, int size) {
-        return find("userId=:userId and (title like :q or author like :q)")
+        return find("userId=:userId and (title like :q or author like :q) order by updatedAt desc")
                 .setParameter("userId", userId)
                 .setParameter("q", "%" + q + "%")
                 .fetch(page, size);
@@ -82,5 +82,22 @@ public class Book extends Model {
                 .setParameter("title", title)
                 .setParameter("author", author)
                 .first() != null;
+    }
+
+    public String getLastUrl() {
+        String url = Chapter.find("select a.url from Chapter a where a.bookId=:bookId order by page desc")
+                .setParameter("bookId", id)
+                .first();
+        return url == null ? this.url : url;
+    }
+
+    public int getLastPage() {
+        return Chapter.find("select coalesce(max(a.page), 0) from Chapter a where a.bookId=:bookId")
+                .setParameter("bookId", id)
+                .first();
+    }
+
+    public void deleteChapters() {
+        Chapter.delete("bookId=?1", id);
     }
 }

@@ -29,36 +29,39 @@
                     <li class="nav-item">
                         <a class="nav-link" href="/events">&{'main.events'}</a>
                     </li>
-                    #{if currentUser}
+                #{if currentUser}
+                    #{if currentUser.isAdmin()}
+                    <li class="nav-item">
+                        <a class="nav-link" href="/books">&{'main.books'}</a>
+                    </li>
+                    #{/if}
                     <li class="nav-item">
                         <a class="nav-link" href="/events/user">&{'main.manage'}</a>
                     </li>
                     <li class="nav-item">
                         <a class="btn btn-primary" href="/events/new">&{'main.add'}</a>
                     </li>
-                    #{/if}
+                #{/if}
                 </ul>
                 <ul class="navbar-nav ml-auto">
-                    #{ifnot currentUser}
-                        <li class="nav-item"><a class="btn btn-primary" href="/login">&{'main.login'}</a></li>
-                    #{/ifnot}
-                    #{else}
-                    <li class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">${currentUser.email}</a>
-                        <div class="dropdown-menu dropdown-menu-right">
-                            <a class="dropdown-item" href="/books">&{'main.books'}</a>
-                            <div class="dropdown-divider"></div>
-                            <form method="post" action="/lang">
-                                #{authenticityToken /}
-                                <input type="hidden" name="redirect" value="${request.url}">
-                                <button class="dropdown-item" type="submit" name="lang" value="zh-TW">中文</button>
-                                <button class="dropdown-item" type="submit" name="lang" value="en">English</button>
-                            </form>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="/logout">&{'main.logout'}</a>
-                        </div>
-                    </li>
-                    #{/else}
+                #{ifnot currentUser}
+                    <li class="nav-item"><a class="btn btn-primary" href="/login">&{'main.login'}</a></li>
+                #{/ifnot}
+                #{else}
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">${currentUser.email}</a>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <form method="post" action="/lang">
+                            #{authenticityToken /}
+                            <input type="hidden" name="redirect" value="${request.url}">
+                            <button class="dropdown-item" type="submit" name="lang" value="zh-TW">中文</button>
+                            <button class="dropdown-item" type="submit" name="lang" value="en">English</button>
+                        </form>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="/logout">&{'main.logout'}</a>
+                    </div>
+                </li>
+                #{/else}
                 </ul>
             </div>
         </div>

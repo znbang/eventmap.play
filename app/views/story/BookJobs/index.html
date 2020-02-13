@@ -1,0 +1,23 @@
+#{extends 'story.html' /}
+#{set title: 'BookJobs.index.job' /}
+
+<div class="container">
+    <div class="mt-2">
+        #{pagination totalPage: totalPage, page: page, size: size /}
+    </div>
+    <table class="table table-sm">
+        <tr>
+            <th class="w-50">&{'BookJobs.index.title'}</th>
+            <th class="w-50">&{'BookJobs.index.status'}</th>
+        </tr>
+    #{list jobs, as:'job'}
+        <tr>
+            <td><A href="/books/${job.bookId}">${job.title}</a></td>
+            <td>${job.status}</td>
+        </tr>
+    #{/list}
+    </table>
+    <div class="mt-2">
+        #{pagination totalPage: totalPage, page: page, size: size /}
+    </div>
+</div>

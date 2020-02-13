@@ -27,8 +27,12 @@ GET     /books/new                              story.Books.form
 POST    /books/new                              story.Books.save
 DELETE  /books/{id}                             story.Books.delete
 GET     /books/{id}/download                    story.Books.download
+POST    /books/{id}/download-all                story.Books.downloadAll
+POST    /books/{id}/download-new                story.Books.downloadNew
 GET     /books/{bookId}                         story.Chapters.index
 GET     /books/{bookId}/{page}                  story.Chapters.show
+
+GET     /jobs                                   story.BookJobs.index
 
 # Ignore favicon requests
 GET     /favicon.ico                            404

@@ -4,7 +4,7 @@ main.events=Events
 main.manage=Manage
 main.add=Add
 main.books=Books
-main.tasks=Tasks
+main.jobs=Jobs
 main.search=Search
 
 Application.index.title=Home
@@ -59,8 +59,17 @@ Books.form.url=URL
 Books.form.url.required=Please input URL.
 Books.form.url.invalid=URL is invalid.
 Books.form.url.exists=The same URL already exists.
+Books.form.url.unsupported=URL is not supported.
 Books.form.delete=Delete
 Books.form.delete.confirm=Do you want to delete %s?
-Books.form.refresh=Refresh
+Books.form.download.new=Download new chapters
+Books.form.download.new.confirm=Do you want to download new chapters?
+Books.form.download.all=Re-Download all chapters
+Books.form.download.all.confirm=Do you want to re-download all chapters?
 Books.form.save=Save
 Books.form.cancel=Cancel
+Books.form.ok=Ok
+
+BookJobs.index.job=Jobs
+BookJobs.index.title=Title
+BookJobs.index.status=Status

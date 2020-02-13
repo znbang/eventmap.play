@@ -21,4 +21,8 @@ public class User extends Model {
         this.id = RandomId.generate();
         this.createdAt = LocalDateTime.now();
     }
+
+    public boolean isAdmin() {
+        return email.equals("znbang@gmail.com");
+    }
 }

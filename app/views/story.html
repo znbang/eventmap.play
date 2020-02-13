@@ -17,7 +17,15 @@
             </button>
             <div class="navbar-collapse collapse" id="navbarNav">
                 <ul class="navbar-nav">
-                    <li class="nav-item"><a class="nav-link" href="#">&{'main.tasks'}</a></li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/events">&{'main.events'}</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/books">&{'main.books'}</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/jobs">&{'main.jobs'}</a>
+                    </li>
                 </ul>
                 <div class="form-inline">
                     <a class="btn btn-primary" href="/books/new">&{'main.add'}</a>
@@ -36,8 +44,6 @@
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">${currentUser.email}</a>
                         <div class="dropdown-menu">
-                            <a class="dropdown-item" href="/">&{'main.events'}</a>
-                            <div class="dropdown-divider"></div>
                             <form method="post" action="/lang">
                                 #{authenticityToken /}
                                 <input type="hidden" name="redirect" value="${request.url}">

@@ -2,14 +2,12 @@ package controllers.story;
 
 import controllers.Controller;
 import controllers.RequireLogin;
+import controllers.story.download.DownloadCenter;
 import models.story.Book;
 import models.story.Chapter;
 import play.mvc.With;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
@@ -29,10 +27,6 @@ public class Books extends Controller {
         render(books, totalPage, page, size);
     }
 
-    public static void edit(String id) {
-        render();
-    }
-
     public static void form(String id) {
         String userId = getCurrentUser().getId();
         Book book = id == null ? new Book() : Book.findByUserId(id, userId);
@@ -50,6 +44,9 @@ public class Books extends Controller {
         validation.required("book.author", book.author).message("Books.form.author.required");
         validation.required("book.url", book.url).message("Books.form.url.required");
         validation.url("book.url", book.url).message("Books.form.url.invalid");
+        if (!DownloadCenter.supports(book.url)) {
+            validation.addError("book.url", "Books.form.url.unsupported");
+        }
 
         if (id == null) {
             if (!validation.hasError("book.url") && Book.existsByUrl(book.url)) {
@@ -75,6 +72,10 @@ public class Books extends Controller {
         model.copyFrom(book);
         model.save();
 
+        if (id == null) {
+            DownloadCenter.add(model.id, model.title);
+        }
+
         index();
     }
 
@@ -98,16 +99,42 @@ public class Books extends Controller {
         if (book == null) {
             notFound("Book not found: " + id);
         }
-        ByteArrayOutputStream buf = new ByteArrayOutputStream();
-        PrintWriter out = new PrintWriter(new OutputStreamWriter(buf, StandardCharsets.UTF_8));
-        for (Chapter chapter : Chapter.listByBookId(id)) {
-            out.println(chapter.title);
-            out.println();
-            out.println(chapter.body);
-            out.println();
-        }
-        out.flush();
 
-        renderBinary(new ByteArrayInputStream(buf.toByteArray()), book.title + ".txt");
+        String fileName = URLEncoder.encode(book.title + ".txt", StandardCharsets.UTF_8);
+        response.setContentTypeIfNotSet("text/plain; charset=UTF-8");
+        response.setHeader("Content-Disposition", String.format("attachment; filename*=utf-8''%s; filename=\"%s\"", fileName, fileName));
+        for (Chapter chapter : Chapter.listByBookId(id)) {
+            String data = chapter.title + "\n\n" + chapter.body + "\n\n";
+            response.writeChunk(data.getBytes(StandardCharsets.UTF_8));
+        }
+    }
+
+    public static void downloadAll(String id) {
+        checkAuthenticity();
+
+        String userId = getCurrentUser().getId();
+        Book book = Book.findByUserId(id, userId);
+        if (book == null) {
+            notFound("Book not found: " + id);
+        }
+
+        book.deleteChapters();
+        DownloadCenter.add(id, book.title);
+
+        form(id);
+    }
+
+    public static void downloadNew(String id) {
+        checkAuthenticity();
+
+        String userId = getCurrentUser().getId();
+        Book book = Book.findByUserId(id, userId);
+        if (book == null) {
+            notFound("Book not found: " + id);
+        }
+
+        DownloadCenter.add(id, book.title);
+
+        form(id);
     }
 }

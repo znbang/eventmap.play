@@ -1,8 +1,10 @@
 package models.story;
 
 import models.Model;
+import models.RandomId;
 
 import javax.persistence.Entity;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -13,9 +15,26 @@ public class Chapter extends Model {
     public LocalDateTime createdAt;
     public LocalDateTime updatedAt;
     public String bookId;
+    public Integer page;
+    public String url;
     public String title;
     public String body;
-    public Integer page;
+
+    Chapter() {}
+
+    @PrePersist
+    void beforePersist() {
+        this.id = RandomId.generate();
+        this.createdAt = this.updatedAt = LocalDateTime.now();
+    }
+
+    public Chapter(String bookId, Integer page, String url, String title, String body) {
+        this.bookId = bookId;
+        this.page = page;
+        this.url = url;
+        this.title = title;
+        this.body = body;
+    }
 
     public static long countByBookId(String bookId) {
         return count("byBookId", bookId);
