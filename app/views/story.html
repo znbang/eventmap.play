@@ -22,9 +22,11 @@
                 <div class="form-inline">
                     <a class="btn btn-primary" href="/books/new">&{'main.add'}</a>
                 </div>
-                <form class="form-inline" method="get" action="/books">
+                <form class="input-group col-lg-3 my-2 my-lg-0 px-0 px-lg-2" method="get" action="/books">
                     <input class="form-control" type="text" name="q" value="${params.q}">
-                    <button class="btn btn-outline-secondary" type="submit">&{'main.search'}</button>
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary" type="submit">&{'main.search'}</button>
+                    </div>
                 </form>
                 <ul class="navbar-nav ml-auto">
                     #{ifnot currentUser}
