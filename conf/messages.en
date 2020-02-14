@@ -8,6 +8,7 @@ main.jobs=Jobs
 main.search=Search
 
 Application.index.title=Home
+Application.search.title=Search
 
 Authenticate.login.title=Login
 Authenticate.login.loginWithGoogle=Login with Google Account

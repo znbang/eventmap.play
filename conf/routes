@@ -4,6 +4,7 @@
 
 # Home page
 GET     /                                       Application.index
+GET     /search                                 Application.search
 GET     /sitemap                                Application.sitemap
 POST    /lang                                   Application.lang
 GET     /login                                  Authenticate.login

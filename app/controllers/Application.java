@@ -33,6 +33,11 @@ public class Application extends Controller {
     }
 
     @NoTransaction
+    public static void search() {
+        render();
+    }
+
+    @NoTransaction
     public static void lang(String lang, String redirect) {
         if (lang != null) {
             Lang.change(lang);

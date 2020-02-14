@@ -8,6 +8,7 @@ main.jobs=工作
 main.search=搜尋
 
 Application.index.title=首頁
+Application.search.title=搜尋
 
 Authenticate.login.title=登入
 Authenticate.login.loginWithGoogle=使用 Google 帳號登入
