@@ -10,13 +10,17 @@ public class DownloadCenter {
             new QingDouDownloader(),
     };
 
-    public static boolean supports(String url) {
+    private static Downloader find(String url) {
         for (Downloader a : downloaders) {
             if (a.supports(url)) {
-                return true;
+                return a;
             }
         }
-        return false;
+        return null;
+    }
+
+    public static boolean supports(String url) {
+        return find(url) != null;
     }
 
     public static void add(String bookId, String title) {
@@ -24,12 +28,10 @@ public class DownloadCenter {
     }
 
     public static void download(String bookId, String url, int page) throws Exception {
-        for (Downloader a : downloaders) {
-            if (a.supports(url)) {
-                a.download(bookId, url, page);
-                break;
-            }
+        Downloader a = find(url);
+        if (a == null) {
+            throw new RuntimeException("Not supported: " + url);
         }
-        throw new RuntimeException("Not supported: " + url);
+        a.download(bookId, url, page);
     }
 }
