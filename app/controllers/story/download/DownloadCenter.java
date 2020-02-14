@@ -5,6 +5,7 @@ import models.story.BookJob;
 public class DownloadCenter {
     private static Downloader[] downloaders = new Downloader[] {
             new Ck101Downloader(),
+            new LewenDownloader(),
     };
 
     public static boolean supports(String url) {
