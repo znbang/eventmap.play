@@ -6,6 +6,7 @@ public class DownloadCenter {
     private static Downloader[] downloaders = new Downloader[] {
             new Ck101Downloader(),
             new LewenDownloader(),
+            new QingDouDownloader(),
     };
 
     public static boolean supports(String url) {
@@ -25,6 +26,7 @@ public class DownloadCenter {
         for (Downloader a : downloaders) {
             if (a.supports(url)) {
                 a.download(bookId, url, page);
+                break;
             }
         }
         throw new RuntimeException("Not supported: " + url);
