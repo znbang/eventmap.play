@@ -7,13 +7,22 @@
     </div>
     <table class="table table-sm">
         <tr>
+            <th class="text-nowrap">&{'BookJobs.index.status'}</th>
             <th class="w-50">&{'BookJobs.index.title'}</th>
-            <th class="w-50">&{'BookJobs.index.status'}</th>
+            <th class="w-50">&{'BookJobs.index.message'}</th>
         </tr>
     #{list jobs, as:'job'}
         <tr>
+            <td class="text-nowrap">
+            #{if job.done}
+                &{'BookJobs.index.done'}
+            #{/if}
+            #{else}
+                &{'BookJobs.index.pending'}
+            #{/else}
+            </td>
             <td><A href="/books/${job.bookId}">${job.title}</a></td>
-            <td>${job.status}</td>
+            <td>${job.message}</td>
         </tr>
     #{/list}
     </table>

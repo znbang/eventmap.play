@@ -71,5 +71,8 @@ Books.form.cancel=Cancel
 Books.form.ok=Ok
 
 BookJobs.index.job=Jobs
-BookJobs.index.title=Title
 BookJobs.index.status=Status
+BookJobs.index.title=Title
+BookJobs.index.message=Message
+BookJobs.index.done=Done
+BookJobs.index.pending=Pending

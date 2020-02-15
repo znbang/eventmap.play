@@ -67,10 +67,11 @@ public class Books extends Controller {
         }
 
         String userId = getCurrentUser().getId();
-        Book model = id == null ? new Book(userId, book) : Book.findByUserId(id, userId);
+        Book model = id == null ? new Book(userId) : Book.findByUserId(id, userId);
         if (model == null) {
             notFound("Book not found: " + id);
         }
+        model.copyFrom(book);
         model.save();
 
         if (id == null) {

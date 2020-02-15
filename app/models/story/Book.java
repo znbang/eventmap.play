@@ -33,17 +33,20 @@ public class Book extends Model {
 
     public Book() {}
 
-    public Book(String userId, Book book) {
+    public Book(String userId) {
         this.userId = userId;
-        this.title = book.title;
-        this.author = book.author;
-        this.url = book.url;
     }
 
     public void trim() {
         title = title.trim();
         author = author.trim();
         url = url.trim();
+    }
+
+    public void copyFrom(Book book) {
+        this.title = book.title;
+        this.author = book.author;
+        this.url = book.url;
     }
 
     public static long countByUserId(String userId, String q) {

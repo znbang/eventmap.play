@@ -71,5 +71,8 @@ Books.form.cancel=取消
 Books.form.ok=確定
 
 BookJobs.index.job=工作
-BookJobs.index.title=書名
 BookJobs.index.status=狀態
+BookJobs.index.title=書名
+BookJobs.index.message=訊息
+BookJobs.index.done=完成
+BookJobs.index.pending=等待處理

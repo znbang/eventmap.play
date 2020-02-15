@@ -7,21 +7,23 @@ import javax.persistence.Entity;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "book_jobs")
 public class BookJob extends Model {
     private LocalDateTime createdAt;
+    private boolean done;
     private String bookId;
     private String title;
-    private String status;
+    private String message;
 
     BookJob() {}
 
     public BookJob(String bookId, String title) {
         this.bookId = bookId;
         this.title = title;
-        this.status = "";
+        this.message = "";
     }
 
     @PrePersist
@@ -42,11 +44,20 @@ public class BookJob extends Model {
         return title;
     }
 
-    public String getStatus() {
-        return status;
+    public String getMessage() {
+        return message;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public void done(String message) {
+        this.done = true;
+        this.message = message;
+    }
+
+    public static List<BookJob> listPending() {
+        return find("done=false").fetch();
     }
 }

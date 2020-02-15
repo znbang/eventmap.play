@@ -63,7 +63,10 @@ create unique index chapters_page_idx on chapters (book_id, page);
 create table book_jobs (
   id text primary key,
   created_at timestamptz not null,
+  done boolean not null,
   book_id text not null,
   title text not null,
-  status text not null
+  message text not null
 );
+
+create index book_jobs_done_idx on book_jobs (done);
