@@ -17,13 +17,12 @@ public class Books extends Controller {
         int page = params.get("page", Integer.class);
         int size = params.get("size", Integer.class);
         String q = params.get("q", String.class);
-        q = q == null ? "" : q.trim();
         String userId = getCurrentUser().getId();
-        long totalPage = q.isEmpty() ? getTotalPage(Book.countByUserId(userId), page, size) : getTotalPage(Book.countByUserIdForSearch(userId, q), page, size);
+        long totalPage = getTotalPage(Book.countByUserId(userId, q), page, size);
         if (page < 1 || page > totalPage) {
             notFound("Page not found: " + page);
         }
-        List<Book> books = q.isEmpty() ?  Book.listByUserId(userId, page, size) : Book.listByUserIdForSearch(userId, q, page, size);
+        List<Book> books = Book.listByUserId(userId, q, page, size);
         render(books, totalPage, page, size);
     }
 
@@ -48,12 +47,16 @@ public class Books extends Controller {
             validation.addError("book.url", "Books.form.url.unsupported");
         }
 
-        if (id == null) {
-            if (!validation.hasError("book.url") && Book.existsByUrl(book.url)) {
+        if (!validation.hasError("book.url")) {
+            Book a = Book.findByUrl(book.url);
+            if (a != null && !a.id.equals(id)) {
                 validation.addError("book.url", "Books.form.url.exists");
             }
+        }
 
-            if (!validation.hasError("book.title") && !validation.hasError("book.author") && Book.existsByTitleAndAuthor(book.title, book.author)) {
+        if (!validation.hasError("book.title") && !validation.hasError("book.author")) {
+            Book b = Book.findByTitleAndAuthor(book.title, book.author);
+            if (b != null && !b.id.equals(id)) {
                 validation.addError("book.title", "Books.form.title.exists");
                 validation.addError("book.author", "Books.form.author.exists");
             }
@@ -64,12 +67,10 @@ public class Books extends Controller {
         }
 
         String userId = getCurrentUser().getId();
-        Book model = id == null ? new Book() : Book.findByUserId(id, userId);
+        Book model = id == null ? new Book(userId, book) : Book.findByUserId(id, userId);
         if (model == null) {
             notFound("Book not found: " + id);
         }
-        model.userId = userId;
-        model.copyFrom(book);
         model.save();
 
         if (id == null) {

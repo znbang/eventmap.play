@@ -31,37 +31,42 @@ public class Book extends Model {
         this.updatedAt = LocalDateTime.now();
     }
 
+    public Book() {}
+
+    public Book(String userId, Book book) {
+        this.userId = userId;
+        this.title = book.title;
+        this.author = book.author;
+        this.url = book.url;
+    }
+
     public void trim() {
         title = title.trim();
         author = author.trim();
         url = url.trim();
     }
 
-    public void copyFrom(Book book) {
-        this.title = book.title;
-        this.author = book.author;
-        this.url = book.url;
+    public static long countByUserId(String userId, String q) {
+        q = q == null ? "" : q.trim();
+        if (q.isEmpty()) {
+            return count("userId=?1", userId);
+        } else {
+            return count("userId=?1 and (title like ?2 or author like ?2)", userId, "%" + q + "%");
+        }
     }
 
-    public static long countByUserId(String userId) {
-        return count("userId=?1", userId);
-    }
-
-    public static long countByUserIdForSearch(String userId, String q) {
-        return count("userId=?1 and (title like ?2 or author like ?2)", userId, "%" + q + "%");
-    }
-
-    public static List<Book> listByUserId(String userId, int page, int size) {
-        return find("userId=:userId order by updatedAt desc")
-                .setParameter("userId", userId)
-                .fetch(page, size);
-    }
-
-    public static List<Book> listByUserIdForSearch(String userId, String q, int page, int size) {
-        return find("userId=:userId and (title like :q or author like :q) order by updatedAt desc")
-                .setParameter("userId", userId)
-                .setParameter("q", "%" + q + "%")
-                .fetch(page, size);
+    public static List<Book> listByUserId(String userId, String q, int page, int size) {
+        q = q == null ? "" : q.trim();
+        if (q.isEmpty()) {
+            return find("userId=:userId order by updatedAt desc")
+                    .setParameter("userId", userId)
+                    .fetch(page, size);
+        } else {
+            return find("userId=:userId and (title like :q or author like :q) order by updatedAt desc")
+                    .setParameter("userId", userId)
+                    .setParameter("q", "%" + q + "%")
+                    .fetch(page, size);
+        }
     }
 
     public static Book findByUserId(String id, String userId) {
@@ -71,17 +76,17 @@ public class Book extends Model {
                 .first();
     }
 
-    public static boolean existsByUrl(String url) {
+    public static Book findByUrl(String url) {
         return find("url=:url")
                 .setParameter("url", url)
-                .first() != null;
+                .first();
     }
 
-    public static boolean existsByTitleAndAuthor(String title, String author) {
+    public static Book findByTitleAndAuthor(String title, String author) {
         return find("title=:title and author=:author")
                 .setParameter("title", title)
                 .setParameter("author", author)
-                .first() != null;
+                .first();
     }
 
     public String getLastUrl() {
