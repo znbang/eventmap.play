@@ -5,7 +5,6 @@ main.manage=管理
 main.add=新增
 main.books=小說
 main.jobs=工作
-main.search=搜尋
 
 Application.index.title=首頁
 Application.search.title=搜尋

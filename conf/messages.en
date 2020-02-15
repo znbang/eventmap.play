@@ -5,7 +5,6 @@ main.manage=Manage
 main.add=Add
 main.books=Books
 main.jobs=Jobs
-main.search=Search
 
 Application.index.title=Home
 Application.search.title=Search
