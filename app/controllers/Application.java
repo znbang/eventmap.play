@@ -3,8 +3,6 @@ package controllers;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import play.db.jpa.JPA;
-import play.db.jpa.NoTransaction;
-import play.db.jpa.Transactional;
 import play.i18n.Lang;
 
 import java.time.format.DateTimeFormatter;
@@ -16,7 +14,6 @@ public class Application extends Controller {
     private static final Gson gson = new Gson();
     private static final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-    @Transactional(readOnly = true)
     public static void index() {
         List<JsonObject> events = eventService.listActiveEvent().stream().map(event -> {
             JsonObject json = new JsonObject();
@@ -32,12 +29,10 @@ public class Application extends Controller {
         render(jsonEvents);
     }
 
-    @NoTransaction
     public static void search() {
         render();
     }
 
-    @NoTransaction
     public static void lang(String lang, String redirect) {
         if (lang != null) {
             Lang.change(lang);
@@ -51,7 +46,6 @@ public class Application extends Controller {
         }
     }
 
-    @Transactional(readOnly = true)
     public static void sitemap() {
         StringBuilder sb = new StringBuilder();
         sb.append("https://eventmap.app/login\n");
