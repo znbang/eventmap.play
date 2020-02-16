@@ -12,6 +12,7 @@ public class DownloadCenter {
             new DownloadCk101(),
             new DownloadLewen(),
             new DownloadQingDou(),
+            new DownloadWfxs(),
     };
 
     private static Download find(String url) {
