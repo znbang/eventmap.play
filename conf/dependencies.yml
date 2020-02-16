@@ -5,3 +5,4 @@ require:
     - com.github.kevinsawicki -> http-request 6.0
     - com.vladmihalcea -> hibernate-types-52 2.9.3
     - org.jsoup -> jsoup 1.12.2
+    - com.hankcs -> hanlp portable-1.7.6

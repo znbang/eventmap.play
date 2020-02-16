@@ -1,6 +1,7 @@
 package controllers.story.download;
 
 import com.github.kevinsawicki.http.HttpRequest;
+import com.hankcs.hanlp.HanLP;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -21,11 +22,15 @@ public class DownloadQingDou implements Download {
         String html = req.body();
         Document doc = Jsoup.parse(html);
         String title = doc.selectFirst(".kfyd > h2").text();
+        title = HanLP.convertToTraditionalChinese(title);
 
         StringBuilder sb = new StringBuilder();
         for (Element node : doc.select("#content > p")) {
             String line = node.text().trim();
-            sb.append(line).append("\n");
+            line = HanLP.convertToTraditionalChinese(line);
+            if (!line.startsWith("喜歡") || !line.endsWith("更新速度最快。")) {
+                sb.append(line).append("\n");
+            }
         }
 
         String next = "";
