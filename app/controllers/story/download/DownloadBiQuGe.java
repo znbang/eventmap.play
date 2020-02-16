@@ -1,6 +1,7 @@
 package controllers.story.download;
 
 import com.github.kevinsawicki.http.HttpRequest;
+import com.hankcs.hanlp.HanLP;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -28,7 +29,9 @@ public class DownloadBiQuGe implements Download {
         StringBuilder sb = new StringBuilder();
         for (Element elem : doc.selectFirst("#content").children()) {
             String line = elem.text().trim();
-            sb.append(line.replace("\u3000\u3000", "")).append("\n");
+            line = line.replace("\u3000\u3000", "");
+            line = HanLP.convertToTraditionalChinese(line);
+            sb.append(line).append("\n");
             if (!line.isEmpty()) {
                 sb.append("\n");
             }
