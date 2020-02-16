@@ -1,9 +1,15 @@
 package controllers.story.download;
 
-import com.github.kevinsawicki.http.HttpRequest;
+import com.gargoylesoftware.htmlunit.BrowserVersion;
+import com.gargoylesoftware.htmlunit.WebClient;
+import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import com.hankcs.hanlp.HanLP;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.TextNode;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class DownloadLewen implements Download {
     @Override
@@ -12,30 +18,31 @@ public class DownloadLewen implements Download {
     }
 
     @Override
-    public DownloadResult download(String url) {
-        HttpRequest req = HttpRequest.get(url)
-                .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36")
-                .referer("https://www.lewenn.com");
-        if (!req.ok()) {
-            throw new RuntimeException(String.format("status: %d, response: %s", req.code(), req.body()));
-        }
-
-        String html = req.body();
+    public DownloadResult download(String url) throws Exception {
+        WebClient client = new WebClient(BrowserVersion.CHROME);
+        client.getOptions().setThrowExceptionOnScriptError(false);
+        HtmlPage page = client.getPage(url);
+        String html = page.asXml();
         Document doc = Jsoup.parse(html);
-        String title = doc.select(".kfyd > h1").text();
+        String title = doc.select(".bookname > h1").text();
+        title = HanLP.convertToTraditionalChinese(title);
 
         StringBuilder sb = new StringBuilder();
-        for (TextNode textNode : doc.selectFirst("div#content").textNodes()) {
+        doc.select("#content > script").remove();
+        doc.select("#content > div").remove();
+        List<TextNode> textNodes = new ArrayList<>();
+        textNodes.addAll(doc.selectFirst("div#content").textNodes());
+        textNodes.addAll(doc.selectFirst("#content > span").textNodes());
+        for (TextNode textNode : textNodes) {
             String line = textNode.text().trim();
-            if (line.startsWith("　　")) {
-                line = line.replace("　　", "");
-            }
+            line = line.replace("　　", "");
             if (!line.isEmpty()) {
+                line = HanLP.convertToTraditionalChinese(line);
                 sb.append(line).append("\n");
             }
         }
 
-        String next = doc.select("#pager_next").attr("href");
+        String next = doc.select(".bottem2 > a.next").attr("href");
         if (next.endsWith(".html")) {
             url = url.substring(0, url.indexOf("/", url.indexOf("://") + 3)) + next;
         } else {
