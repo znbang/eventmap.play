@@ -65,11 +65,15 @@ public class DownloadCenter {
             updateJob(jobId, result.title);
             if (skipFirstResult) {
                 skipFirstResult = false;
+            } else if (result.body.trim().isEmpty()) {
+                updateJob(jobId, "Empty body");
+                return;
             } else {
                 page = page + 1;
                 save(new Chapter(bookId, page, url, result.title, result.body));
+                url = result.next;
             }
-            url = result.next;
+            Thread.sleep(500);
         }
     }
 
