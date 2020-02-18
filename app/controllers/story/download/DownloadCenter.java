@@ -12,6 +12,7 @@ public class DownloadCenter {
             new DownloadCk101(),
             new DownloadLewen(),
             new DownloadQingDou(),
+            new DownloadShuQuGe(),
             new DownloadWfxs(),
     };
 
@@ -65,7 +66,7 @@ public class DownloadCenter {
             updateJob(jobId, result.title);
             if (skipFirstResult) {
                 skipFirstResult = false;
-            } else if (result.body.trim().isEmpty()) {
+            } else if (result.title == null && result.body.trim().isEmpty()) {
                 updateJob(jobId, "Empty body");
                 return;
             } else {
